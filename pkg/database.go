@@ -5,6 +5,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -16,6 +17,9 @@ type DefaultDao struct {
 }
 
 func GormInit() *gorm.DB {
+
+	godotenv.Load()
+
 	host := os.Getenv("GORMDB_HOST")
 	user := os.Getenv("GORMDB_USER")
 	pass := os.Getenv("GORMDB_PASS")

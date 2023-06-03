@@ -1,9 +1,17 @@
 package main
 
-import "github.com/labstack/echo/v4"
+import (
+	"os"
+
+	"github.com/joho/godotenv"
+	"github.com/labstack/echo/v4"
+)
 
 func main() {
+	godotenv.Load()
 	e := echo.New()
 
-	e.Start(":8080")
+	port := os.Getenv("PORT")
+
+	e.Start(":" + port)
 }
