@@ -10,7 +10,7 @@ type ActivityRepository interface {
 	//create
 	Create(activity *model.Activity) error
 	//bulk create
-	CreateBulk(activity *[]model.Activity) error
+	// CreateBulk(activity *[]model.Activity) error
 	//update
 	Update(activity string, id uint) error
 	//getbyid
@@ -39,13 +39,13 @@ func (r *activityRepositoryImpl) Create(activity *model.Activity) error {
 	return nil
 }
 
-func (r *activityRepositoryImpl) CreateBulk(activity *[]model.Activity) error {
-	if err := r.db.Create(activity).Error; err != nil {
-		return err
-	}
+// func (r *activityRepositoryImpl) CreateBulk(activity *[]model.Activity) error {
+// 	if err := r.db.Create(activity).Error; err != nil {
+// 		return err
+// 	}
 
-	return nil
-}
+// 	return nil
+// }
 
 func (r *activityRepositoryImpl) Update(activity string, id uint) error {
 	err := r.db.Where("id = ?", id).Update("list", activity).Error
