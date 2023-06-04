@@ -14,8 +14,8 @@ func ConnectDb() {
 	database := pkg.GormInit()
 	err := database.AutoMigrate(
 		&model.User{},
-		&model.Activity{},
 		&model.Title{},
+		&model.Activity{},
 	)
 	if err != nil {
 		pkg.Logger(err.Error())

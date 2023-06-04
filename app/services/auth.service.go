@@ -16,7 +16,7 @@ type authServiceImpl struct {
 	jwt        pkg.JWTService
 }
 
-func NewAuthRepositoryImpl(repository repository.UserRepository, jwt pkg.JWTService) AuthService {
+func NewAuthServiceImpl(repository repository.UserRepository, jwt pkg.JWTService) AuthService {
 	return &authServiceImpl{
 		repository: repository,
 		jwt:        jwt,

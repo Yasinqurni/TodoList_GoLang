@@ -7,7 +7,7 @@ import (
 )
 
 type UserService interface {
-	GetByCode(code string, id uint64) (user *model.User, err error)
+	GetByCode(code string) (user *model.User, err error)
 	GetById(id uint64) (*model.User, error)
 	GetAll() (*[]model.User, error)
 }
@@ -16,11 +16,11 @@ type userServiceImpl struct {
 	repository repository.UserRepository
 }
 
-func NewUserRepositoryImpl(repository repository.UserRepository) UserService {
+func NewUserServiceImpl(repository repository.UserRepository) UserService {
 	return &userServiceImpl{repository: repository}
 }
 
-func (s *userServiceImpl) GetByCode(code string, id uint64) (user *model.User, err error) {
+func (s *userServiceImpl) GetByCode(code string) (user *model.User, err error) {
 	users, err := s.repository.GetAll()
 	if err != nil {
 		return nil, err
