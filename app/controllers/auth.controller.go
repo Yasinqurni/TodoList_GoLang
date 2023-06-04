@@ -30,29 +30,29 @@ func (d *authControllerImpl) Register(c echo.Context) error {
 
 	var req dto.UserRequest
 	if err := c.Bind(&req); err != nil {
-		data := helper.NewErrorResponse(400, "cannot bind user request", err)
+		data := helper.NewErrorResponse("cannot bind user request", err)
 		return c.JSON(http.StatusBadRequest, data)
 	}
 	if req.Name == "" || reflect.TypeOf(req.Code).Kind() != reflect.Uint || len(strconv.Itoa(int(req.Code))) != 4 {
-		data := helper.NewErrorResponse(400, "please insert body", nil)
+		data := helper.NewErrorResponse("please insert body", nil)
 		return c.JSON(http.StatusBadRequest, data)
 	}
 	user, err := d.userService.GetByCode(strconv.Itoa(int(req.Code)))
 	if err != nil {
-		data := helper.NewErrorResponse(400, "error search user", err)
+		data := helper.NewErrorResponse("error search user", err)
 		return c.JSON(http.StatusBadRequest, data)
 	}
 	if user != nil {
-		data := helper.NewErrorResponse(400, "duplicate user", err)
+		data := helper.NewErrorResponse("duplicate user", err)
 		return c.JSON(http.StatusBadRequest, data)
 	}
 	err = d.authService.Register(req.Name, strconv.Itoa(int(req.Code)))
 	if err != nil {
-		data := helper.NewErrorResponse(400, "error register", err)
+		data := helper.NewErrorResponse("error register", err)
 		return c.JSON(http.StatusBadRequest, data)
 	}
 
-	data := helper.NewResponse(200, "register successful", nil)
+	data := helper.NewResponse("register successful", nil)
 	return c.JSON(http.StatusOK, data)
 }
 
@@ -61,23 +61,23 @@ func (d *authControllerImpl) Login(c echo.Context) error {
 	var req dto.UserLogin
 
 	if err := c.Bind(&req); err != nil {
-		data := helper.NewErrorResponse(400, "cannot bind user request", err)
+		data := helper.NewErrorResponse("cannot bind user request", err)
 		return c.JSON(http.StatusBadRequest, data)
 	}
 
 	if reflect.TypeOf(req.Code).Kind() != reflect.Uint || len(strconv.Itoa(int(req.Code))) != 4 {
-		data := helper.NewErrorResponse(400, "please insert body", nil)
+		data := helper.NewErrorResponse("please insert body", nil)
 		return c.JSON(http.StatusBadRequest, data)
 	}
 
 	user, err := d.userService.GetByCode(strconv.Itoa(int(req.Code)))
 	if err != nil {
-		data := helper.NewErrorResponse(400, "error search user", err)
+		data := helper.NewErrorResponse("error search user", err)
 		return c.JSON(http.StatusBadRequest, data)
 	}
 
 	if user == nil {
-		data := helper.NewErrorResponse(404, "user not found", err)
+		data := helper.NewErrorResponse("user not found", err)
 		return c.JSON(http.StatusNotFound, data)
 	}
 
@@ -85,11 +85,11 @@ func (d *authControllerImpl) Login(c echo.Context) error {
 
 	token, err := jwt.GenerateToken(strconv.Itoa(int(user.ID)))
 	if err != nil {
-		data := helper.NewErrorResponse(400, "error login", err)
+		data := helper.NewErrorResponse("error login", err)
 		return c.JSON(http.StatusBadRequest, data)
 	}
 
-	data := helper.NewLoginResponse(200, "register successful", token)
+	data := helper.NewLoginResponse("register successful", token)
 	return c.JSON(http.StatusOK, data)
 
 }
