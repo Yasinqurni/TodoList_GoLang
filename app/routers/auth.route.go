@@ -10,7 +10,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func AuthRoute(e *echo.Echo, db *gorm.DB) {
+func AuthRoute(e *echo.Group, db *gorm.DB) {
 	// Inisialisasi dependensi yang diperlukan
 	userRepository := repository.NewUserRepositoryImpl(db)
 	jwt := pkg.NewJWTService()

@@ -13,9 +13,11 @@ func main() {
 	godotenv.Load()
 	e := echo.New()
 
+	v1 := e.Group("/v1")
+
 	config.ConnectDb()
 
-	route.AuthRoute(e, config.DB)
+	route.AuthRoute(v1, config.DB)
 
 	port := os.Getenv("PORT")
 
