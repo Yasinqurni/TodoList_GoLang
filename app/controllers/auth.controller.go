@@ -7,6 +7,7 @@ import (
 	service "todoList_GoLang/app/services"
 	"todoList_GoLang/dto"
 	"todoList_GoLang/pkg"
+	helper "todoList_GoLang/response-helper"
 
 	"github.com/labstack/echo/v4"
 )
@@ -29,24 +30,30 @@ func (d *authControllerImpl) Register(c echo.Context) error {
 
 	var req dto.UserRequest
 	if err := c.Bind(&req); err != nil {
-		return c.JSON(http.StatusBadRequest, err)
+		data := helper.NewErrorResponse(400, "cannot bind user request", err)
+		return c.JSON(http.StatusBadRequest, data)
 	}
 	if req.Name == "" || reflect.TypeOf(req.Code).Kind() != reflect.Uint || len(strconv.Itoa(int(req.Code))) != 4 {
-		return c.JSON(http.StatusBadRequest, "error body")
+		data := helper.NewErrorResponse(400, "please insert body", nil)
+		return c.JSON(http.StatusBadRequest, data)
 	}
 	user, err := d.userService.GetByCode(strconv.Itoa(int(req.Code)))
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, err)
+		data := helper.NewErrorResponse(400, "error search user", err)
+		return c.JSON(http.StatusBadRequest, data)
 	}
 	if user != nil {
-		return c.JSON(http.StatusBadRequest, "duplicate user")
+		data := helper.NewErrorResponse(400, "duplicate user", err)
+		return c.JSON(http.StatusBadRequest, data)
 	}
 	err = d.authService.Register(req.Name, strconv.Itoa(int(req.Code)))
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, err)
+		data := helper.NewErrorResponse(400, "error register", err)
+		return c.JSON(http.StatusBadRequest, data)
 	}
 
-	return c.JSON(http.StatusOK, nil)
+	data := helper.NewResponse(200, "register successful", nil)
+	return c.JSON(http.StatusOK, data)
 }
 
 func (d *authControllerImpl) Login(c echo.Context) error {
@@ -54,29 +61,35 @@ func (d *authControllerImpl) Login(c echo.Context) error {
 	var req dto.UserLogin
 
 	if err := c.Bind(&req); err != nil {
-		return c.JSON(http.StatusBadRequest, err)
+		data := helper.NewErrorResponse(400, "cannot bind user request", err)
+		return c.JSON(http.StatusBadRequest, data)
 	}
 
 	if reflect.TypeOf(req.Code).Kind() != reflect.Uint || len(strconv.Itoa(int(req.Code))) != 4 {
-		return c.JSON(http.StatusBadRequest, "error body")
+		data := helper.NewErrorResponse(400, "please insert body", nil)
+		return c.JSON(http.StatusBadRequest, data)
 	}
 
 	user, err := d.userService.GetByCode(strconv.Itoa(int(req.Code)))
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, err)
+		data := helper.NewErrorResponse(400, "error search user", err)
+		return c.JSON(http.StatusBadRequest, data)
 	}
 
 	if user == nil {
-		return c.JSON(http.StatusNotFound, "user not found")
+		data := helper.NewErrorResponse(404, "user not found", err)
+		return c.JSON(http.StatusNotFound, data)
 	}
 
 	jwt := pkg.NewJWTService()
 
 	token, err := jwt.GenerateToken(strconv.Itoa(int(user.ID)))
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, err)
+		data := helper.NewErrorResponse(400, "error login", err)
+		return c.JSON(http.StatusBadRequest, data)
 	}
 
-	return c.JSON(http.StatusOK, token)
+	data := helper.NewLoginResponse(200, "register successful", token)
+	return c.JSON(http.StatusOK, data)
 
 }
