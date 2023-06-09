@@ -14,7 +14,7 @@ type TitleService interface {
 	//getbyid
 	GetById(id, userId uint) (*model.Title, error)
 	//update
-	Update(title string, id uint) error
+	Update(title dto.TitleRequest, id uint) error
 	//delete
 	Delete(id uint) error
 }
@@ -55,8 +55,10 @@ func (s titleServiceImpl) GetById(id, userId uint) (*model.Title, error) {
 	return data, nil
 }
 
-func (s titleServiceImpl) Update(title string, id uint) error {
-	err := s.repository.Update(title, id)
+func (s titleServiceImpl) Update(title dto.TitleRequest, id uint) error {
+
+	var data = title.Title
+	err := s.repository.Update(data, id)
 	if err != nil {
 		return err
 	}

@@ -28,7 +28,7 @@ func AuthorizeJWT(next echo.HandlerFunc) echo.HandlerFunc {
 		}
 
 		// Set user ID from JWT claims into context for further use
-		c.Set("userId", claims["userId"].(string))
+		c.Set("userId", claims["userId"].(uint))
 		return next(c)
 	}
 }
