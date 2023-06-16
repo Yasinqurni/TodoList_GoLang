@@ -5,7 +5,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/dgrijalva/jwt-go"
+	"github.com/dgrijalva/jwt-go/v4"
 )
 
 type JWTService interface {
@@ -41,12 +41,16 @@ func getSecretKey() string {
 }
 
 func (j *jwtService) GenerateToken(UserID string) (string, error) {
+
+	expire := jwt.Time{
+		Time: time.Now().AddDate(0, 0, 1),
+	}
+
 	claims := &jwtCustomClaim{
 		UserID,
 		jwt.StandardClaims{
-			ExpiresAt: time.Now().AddDate(0, 0, 1).Unix(),
+			ExpiresAt: &expire,
 			Issuer:    j.issuer,
-			IssuedAt:  time.Now().Unix(),
 		},
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)

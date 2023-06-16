@@ -4,7 +4,7 @@ import (
 	"strings"
 	"todoList_GoLang/pkg"
 
-	"github.com/golang-jwt/jwt"
+	"github.com/dgrijalva/jwt-go/v4"
 	"github.com/labstack/echo/v4"
 )
 
